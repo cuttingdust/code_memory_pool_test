@@ -112,13 +112,17 @@ void *ngx_mem_pool::ngx_create_pool(size_t size)
         if (!impl_->pool_)
         {
             printf("ngx_create_pool failed\n");
-            throw std::runtime_error("ngx_create_pool failed");
         }
     }
 }
 
 void *ngx_mem_pool::ngx_palloc(size_t size)
 {
+    if (!impl_->pool_)
+    {
+        return nullptr;
+    }
+
     if (size <= impl_->pool_->max)
     {                                     /// 大小内存的分界线 就是一个页面
         return ngx_palloc_small(size, 1); /// 考虑内存对齐
@@ -129,6 +133,11 @@ void *ngx_mem_pool::ngx_palloc(size_t size)
 
 void *ngx_mem_pool::ngx_pnalloc(size_t size)
 {
+    if (!impl_->pool_)
+    {
+        return nullptr;
+    }
+
     if (size <= impl_->pool_->max)
     {
         return ngx_palloc_small(size, 0); /// 不考虑内存对齐
@@ -150,6 +159,11 @@ void *ngx_mem_pool::ngx_pcalloc(size_t size)
 
 ngx_int_t ngx_mem_pool::ngx_pfree(void *p)
 {
+    if (!impl_->pool_)
+    {
+        return NGX_ERROR;
+    }
+
     ngx_pool_large_s *l;
 
     for (l = impl_->pool_->large; l; l = l->next)
@@ -170,6 +184,11 @@ void ngx_mem_pool::ngx_reset_pool()
 {
     ngx_pool_s       *p;
     ngx_pool_large_s *l;
+
+    if (!impl_->pool_)
+    {
+        return;
+    }
 
     /// 大块内存重置
     for (l = impl_->pool_->large; l; l = l->next)
@@ -249,6 +268,11 @@ void *ngx_mem_pool::ngx_palloc_small(size_t size, ngx_uint_t align)
     u_char     *m;
     ngx_pool_t *p;
 
+    if (!impl_->pool_)
+    {
+        return nullptr;
+    }
+
     p = impl_->pool_->current;
 
     do
@@ -279,6 +303,11 @@ void *ngx_mem_pool::ngx_palloc_large(size_t size)
     void             *p;
     ngx_uint_t        n;
     ngx_pool_large_t *large;
+
+    if (!impl_->pool_)
+    {
+        return nullptr;
+    }
 
     p = malloc(size);
     if (p == NULL)
@@ -321,6 +350,11 @@ void *ngx_mem_pool::ngx_palloc_block(size_t size)
     u_char     *m;
     size_t      psize;
     ngx_pool_t *p, *newpool;
+
+    if (!impl_->pool_)
+    {
+        return nullptr;
+    }
 
     psize = (size_t)(impl_->pool_->d.end - (u_char *)impl_->pool_); /// 分配一个一样的
 
