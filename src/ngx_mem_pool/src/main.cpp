@@ -50,6 +50,8 @@ int main(int argc, char *argv[])
     c2->handler            = func2;
     c2->data               = p2->pfile;
 
+    mem_pool.ngx_destroy_pool();
+
     getchar();
     return 0;
 }

@@ -84,8 +84,6 @@ void ngx_mem_pool::PImpl::ngx_destroy_pool(ngx_pool_t *pool)
             break;
         }
     }
-
-    p = nullptr;
 }
 
 ngx_mem_pool::ngx_mem_pool()
@@ -104,7 +102,7 @@ ngx_mem_pool::~ngx_mem_pool()
     this->ngx_destroy_pool();
 }
 
-void *ngx_mem_pool::ngx_create_pool(size_t size)
+void ngx_mem_pool::ngx_create_pool(size_t size)
 {
     if (!impl_->pool_)
     {
@@ -260,6 +258,7 @@ void ngx_mem_pool::ngx_destroy_pool()
     if (impl_->pool_)
     {
         PImpl::ngx_destroy_pool(impl_->pool_);
+        impl_->pool_ = nullptr;
     }
 }
 

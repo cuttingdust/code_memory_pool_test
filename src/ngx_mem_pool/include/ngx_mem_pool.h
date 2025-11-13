@@ -112,7 +112,7 @@ public:
     /// \brief 创建指定size大小的内存池， 但是小块内存池不超过一个页面的大小
     /// \param size
     /// \return
-    void *ngx_create_pool(size_t size);
+    void ngx_create_pool(size_t size);
 
     /// \brief 考虑内存字节对齐, 从内存池申请size大小的内存
     /// \param size
