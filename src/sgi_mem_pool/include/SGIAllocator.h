@@ -303,12 +303,13 @@ public:
     /// \         这种设计节省了内存，一个内存块同时满足管理和存储需求
     union Obj
     {
+        /// 每一块chunk块的头信息 ， M_free_list_link存储下一个chunk块的地址
         union Obj* M_free_list_link; ///< 指向下一个空闲块的指针
         char       M_client_data[1]; ///< 用户数据存储区（最小1字节）
     };
 
 private:
-    /// 内存池状态变量
+    /// 已分配的内存chunk 块的使用情况
     static char*             S_start_free;             ///< 内存池起始位置
     static char*             S_end_free;               ///< 内存池结束位置
     static size_t            S_heap_size;              ///< 内存池总大小
@@ -395,7 +396,7 @@ private:
         return (((bytes) + (size_t)_ALIGN - 1) / (size_t)_ALIGN - 1);
     }
 
-    /// \brief 重新填充自由链表
+    /// \brief 重新填充自由链表 主要是把分别配好的chunk块进行连接的
     /// \param n 每个内存块的大小（已对齐）
     /// \return 第一个内存块的地址
     ///
