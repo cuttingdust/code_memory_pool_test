@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.12)
 set(CMAKE_TOOLCHAIN_FILE $ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake CACHE STRING "Vcpkg toolchain file")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-project(memory_test)
+project(memory_pool_test)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 if(MSVC)
@@ -50,6 +50,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(CommonTools)
 
 add_subdirectory(ngx_mem_pool)
+add_subdirectory(sgi_mem_pool)
 
 # 拷贝assert目录到输出目录
 # set(ASSERT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/assert)
